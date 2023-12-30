@@ -38,4 +38,8 @@ public class CompressedRedisSerializer implements RedisSerializer<byte[]> {
         log.debug("Decompressed Data Length: {} ", data.length);
         return decompressData(data);
     }
+
+    private byte[] compressData(byte[] data) {
+        return compressionAlgorithm.compress(data);
+    }
 }

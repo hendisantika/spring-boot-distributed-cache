@@ -10,6 +10,8 @@ import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.support.collections.RedisProperties;
 
 /**
@@ -65,5 +67,24 @@ public class RedisClientConfig {
                 lettucePoolingClientConfiguration);
         factory.afterPropertiesSet();
         return factory;
+    }
+
+    /**
+     * Caution! Do not use `new GenericJackson2JsonRedisSerializer(objectMapper)`!
+     * RedisTemplate needs information about each serialized class, but standard objectMapper
+     * doesn't provide this information.
+     * Either use `new GenericJackson2JsonSerializer()` or manually serialize objects before saving
+     * to Redis
+     */
+    @Bean
+    public RedisTemplate<String, byte[]> redisTemplate(
+            RedisConnectionFactory lettuceConnectionFactory, RedisProperties redisProperties) {
+        RedisTemplate<String, byte[]> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setDefaultSerializer(
+                new CompressedRedisSerializer(redisProperties.getCompressionAlgorithm()));
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
     }
 }

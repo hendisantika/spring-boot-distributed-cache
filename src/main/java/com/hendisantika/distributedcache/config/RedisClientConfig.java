@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.support.collections.RedisProperties;
 
@@ -53,5 +55,15 @@ public class RedisClientConfig {
         // Set up password here if necessary
         // clusterConfiguration.setPassword(...);
         return clusterConfiguration;
+    }
+
+    @Bean
+    public RedisConnectionFactory lettuceConnectionFactory(
+            RedisClusterConfiguration customRedisCluster,
+            LettucePoolingClientConfiguration lettucePoolingClientConfiguration) {
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(customRedisCluster,
+                lettucePoolingClientConfiguration);
+        factory.afterPropertiesSet();
+        return factory;
     }
 }

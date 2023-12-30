@@ -42,4 +42,8 @@ public class CompressedRedisSerializer implements RedisSerializer<byte[]> {
     private byte[] compressData(byte[] data) {
         return compressionAlgorithm.compress(data);
     }
+
+    private byte[] decompressData(byte[] compressedData) {
+        return compressionAlgorithm.decompress(compressedData);
+    }
 }

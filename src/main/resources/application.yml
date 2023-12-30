@@ -1,0 +1,42 @@
+server:
+  compression:
+    enabled: true
+  # Default port
+  port: 8081
+  # Enable graceful shutdown - Server will wait for active request to finish
+  shutdown: graceful
+  tomcat:
+    mbeanregistry:
+      enabled: true
+# Spring Configuration
+spring:
+  application:
+    name: distributed-cache
+  profiles:
+    active: local
+# Swagger
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+# Redis Configuration
+cache:
+  redis:
+    config:
+      connection-timeout: 1s
+      read-timeout: 1s
+      max-idle-pool: 8
+      max-total-pool: 8
+      max-wait: 1s
+      min-idle-pool: 0
+      retry: 1
+      nodes:
+        - localhost: 7000
+        - localhost: 7001
+        - localhost: 7002
+        - localhost: 7003
+        - localhost: 7004
+        - localhost: 7005
+    ttl: 1m
+    compression-algorithm: SNAPPY

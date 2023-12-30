@@ -1,5 +1,6 @@
 package com.hendisantika.distributedcache.config;
 
+import com.hendisantika.distributedcache.compression.CompressedRedisSerializer;
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;

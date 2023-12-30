@@ -23,4 +23,12 @@ public enum CompressionAlgorithm {
     SNAPPY(Snappy::compress, Snappy::uncompress);
     private final CheckedFunction1<byte[], byte[]> compressor;
     private final CheckedFunction1<byte[], byte[]> decompressor;
+
+    public byte[] compress(byte[] data) {
+        try {
+            return compressor.apply(data);
+        } catch (Throwable e) {
+            throw new RuntimeException("Couldn't compress using " + name(), e);
+        }
+    }
 }

@@ -6,6 +6,7 @@ import io.lettuce.core.resource.DefaultClientResources;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.support.collections.RedisProperties;
 
@@ -42,5 +43,15 @@ public class RedisClientConfig {
                 .commandTimeout(redisProperties.getConfig().getReadTimeout())
                 .poolConfig(redisProperties.getConfig().getPoolConfig())
                 .clientOptions(redisClientOptions).clientResources(redisClientResources).build();
+    }
+
+    @Bean
+    public RedisClusterConfiguration customRedisCluster(RedisProperties redisProperties) {
+        RedisConfig newConfig = redisProperties.getConfig();
+        RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration(
+                newConfig.getNodes());
+        // Set up password here if necessary
+        // clusterConfiguration.setPassword(...);
+        return clusterConfiguration;
     }
 }

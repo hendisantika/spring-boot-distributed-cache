@@ -6,6 +6,8 @@ import io.lettuce.core.resource.DefaultClientResources;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
+import org.springframework.data.redis.support.collections.RedisProperties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,5 +32,15 @@ public class RedisClientConfig {
         return ClientOptions.builder()
                 .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS)
                 .autoReconnect(true).build();
+    }
+
+    @Bean
+    public LettucePoolingClientConfiguration lettucePoolingClientConfiguration(
+            ClientOptions redisClientOptions, ClientResources redisClientResources,
+            RedisProperties redisProperties) {
+        return LettucePoolingClientConfiguration.builder()
+                .commandTimeout(redisProperties.getConfig().getReadTimeout())
+                .poolConfig(redisProperties.getConfig().getPoolConfig())
+                .clientOptions(redisClientOptions).clientResources(redisClientResources).build();
     }
 }

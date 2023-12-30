@@ -31,4 +31,12 @@ public enum CompressionAlgorithm {
             throw new RuntimeException("Couldn't compress using " + name(), e);
         }
     }
+
+    public byte[] decompress(byte[] data) {
+        try {
+            return decompressor.apply(data);
+        } catch (Throwable e) {
+            throw new RuntimeException("Couldn't compress using " + name(), e);
+        }
+    }
 }

@@ -3,6 +3,8 @@ package com.hendisantika.distributedcache.compression;
 import io.vavr.CheckedFunction1;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.xerial.snappy.Snappy;
 

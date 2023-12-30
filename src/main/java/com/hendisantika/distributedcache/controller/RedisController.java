@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,5 +43,17 @@ public class RedisController {
         // Fetch Data from the Database
         // Write Data into the Cache
         return new FallbackDTO("Cache miss;");
+    }
+
+    @PostMapping
+    public void setItem(@RequestBody ItemDTO item) {
+        try {
+            byte[] serializedValue = objectMapper.writeValueAsBytes(item);
+            redisTemplate.opsForValue().set(String.valueOf(item.getId()), serializedValue,
+                    redisProperties.getTtl());
+            // Store Data in the Database
+        } catch (Exception e) {
+            log.error("Error while writing to cache", e);
+        }
     }
 }

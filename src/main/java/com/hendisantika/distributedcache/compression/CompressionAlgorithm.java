@@ -3,9 +3,12 @@ package com.hendisantika.distributedcache.compression;
 import io.vavr.CheckedFunction1;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.xerial.snappy.Snappy;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -50,6 +53,18 @@ public enum CompressionAlgorithm {
                  OutputStream compressedStream = newStream.apply(outputStream)) {
                 compressedStream.write(data);
                 compressedStream.close();
+                return outputStream.toByteArray();
+            }
+        };
+    }
+
+    private static CheckedFunction1<byte[], byte[]> streamDecompressor(
+            CheckedFunction1<InputStream, InputStream> newStream) {
+        return compressedData -> {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                 InputStream compressedStream = newStream
+                         .apply(new ByteArrayInputStream(compressedData))) {
+                IOUtils.copy(compressedStream, outputStream);
                 return outputStream.toByteArray();
             }
         };

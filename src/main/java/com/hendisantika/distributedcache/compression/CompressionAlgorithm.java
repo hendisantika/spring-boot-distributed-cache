@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.xerial.snappy.Snappy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+
 /**
  * Created by IntelliJ IDEA.
  * Project : spring-boot-distributed-cache
@@ -38,5 +41,17 @@ public enum CompressionAlgorithm {
         } catch (Throwable e) {
             throw new RuntimeException("Couldn't compress using " + name(), e);
         }
+    }
+
+    private static CheckedFunction1<byte[], byte[]> streamCompressor(
+            CheckedFunction1<OutputStream, OutputStream> newStream) {
+        return data -> {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                 OutputStream compressedStream = newStream.apply(outputStream)) {
+                compressedStream.write(data);
+                compressedStream.close();
+                return outputStream.toByteArray();
+            }
+        };
     }
 }

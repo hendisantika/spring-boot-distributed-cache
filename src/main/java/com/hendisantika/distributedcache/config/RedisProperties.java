@@ -1,5 +1,6 @@
 package com.hendisantika.distributedcache.config;
 
+import com.hendisantika.distributedcache.compression.CompressionAlgorithm;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,5 +1,6 @@
 package com.hendisantika.distributedcache.config;
 
+import io.lettuce.core.ClientOptions;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
 import org.springframework.context.annotation.Bean;
@@ -22,5 +23,12 @@ public class RedisClientConfig {
     @Bean(destroyMethod = "shutdown")
     public ClientResources redisClientResources() {
         return DefaultClientResources.create();
+    }
+
+    @Bean
+    public ClientOptions redisClientOptions() {
+        return ClientOptions.builder()
+                .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS)
+                .autoReconnect(true).build();
     }
 }

@@ -29,4 +29,13 @@ public class CompressedRedisSerializer implements RedisSerializer<byte[]> {
         log.debug("Serialized Data Length: {} ", data.length);
         return compressData(data);
     }
+
+    @Override
+    public byte[] deserialize(byte[] data) throws SerializationException {
+        if (data == null) {
+            return null;
+        }
+        log.debug("Decompressed Data Length: {} ", data.length);
+        return decompressData(data);
+    }
 }

@@ -3,6 +3,9 @@ package com.hendisantika.distributedcache.config;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -33,5 +36,20 @@ public class LocalRedisInitializer implements
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         redisLocalSetup(applicationContext);
+    }
+
+    private void redisLocalSetup(ConfigurableApplicationContext context) {
+        ConfigurableEnvironment environment = context.getEnvironment();
+        GenericContainer<?> redis = new GenericContainer<>(
+                DockerImageName.parse("grokzen/redis-cluster:6.0.7"))
+                .withExposedPorts(redisClusterPorts.toArray(new Integer[0]));
+        redis.start();
+        String hostAddress = redis.getHost();
+        redisClusterPorts.forEach(port -> {
+            Integer mappedPort = redis.getMappedPort(port);
+            redisClusterNotPortMapping.put(port, mappedPort);
+            nodes.add(hostAddress + ":" + mappedPort);
+        });
+        setProperties(environment, "cache.redis.config.nodes", nodes);
     }
 }

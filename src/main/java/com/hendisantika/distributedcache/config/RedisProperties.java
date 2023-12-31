@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.Duration;
@@ -23,6 +24,7 @@ import java.time.Duration;
 @Validated
 @SuppressWarnings("NullAway.Init")
 @ConfigurationProperties(prefix = "cache.redis")
+@Component
 public class RedisProperties {
     @NotNull
     private Duration ttl;

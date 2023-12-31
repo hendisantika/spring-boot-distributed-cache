@@ -1,9 +1,14 @@
 package com.hendisantika.distributedcache.config;
 
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.resource.SocketAddressResolver;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -51,5 +56,27 @@ public class LocalRedisInitializer implements
             nodes.add(hostAddress + ":" + mappedPort);
         });
         setProperties(environment, "cache.redis.config.nodes", nodes);
+    }
+
+    @Bean(destroyMethod = "shutdown")
+    public ClientResources redisClientResources() {
+        final SocketAddressResolver socketAddressResolver = new SocketAddressResolver() {
+            @Override
+            public SocketAddress resolve(RedisURI redisURI) {
+                Integer mappedPort = redisClusterNotPortMapping.get(redisURI.getPort());
+                if (mappedPort != null) {
+                    SocketAddress socketAddress = redisClusterSocketAddresses.get(mappedPort);
+                    if (socketAddress != null) {
+                        return socketAddress;
+                    }
+                    redisURI.setPort(mappedPort);
+                }
+                redisURI.setHost(DockerClientFactory.instance().dockerHostIpAddress());
+                SocketAddress socketAddress = super.resolve(redisURI);
+                redisClusterSocketAddresses.putIfAbsent(redisURI.getPort(), socketAddress);
+                return socketAddress;
+            }
+        };
+        return ClientResources.builder().socketAddressResolver(socketAddressResolver).build();
     }
 }

@@ -29,4 +29,9 @@ public class LocalRedisInitializer implements
     private static final List<String> nodes = new ArrayList<>();
     private static final ConcurrentMap<Integer, Integer> redisClusterNotPortMapping = new ConcurrentHashMap<>();
     private static final ConcurrentMap<Integer, SocketAddress> redisClusterSocketAddresses = new ConcurrentHashMap<>();
+
+    @Override
+    public void initialize(ConfigurableApplicationContext applicationContext) {
+        redisLocalSetup(applicationContext);
+    }
 }

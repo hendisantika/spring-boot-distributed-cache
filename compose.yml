@@ -1,0 +1,79 @@
+services:
+  redis-node1:
+    image: redis:7.0-alpine
+    container_name: redis-node1
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --port 6379
+    volumes:
+      - ./data/redis-node1:/data
+    ports:
+      - "6379:6379"
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.2
+
+  redis-node2:
+    image: redis:7.0-alpine
+    container_name: redis-node2
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --port 6379
+    volumes:
+      - ./data/redis-node2:/data
+    ports:
+      - "6380:6379"
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.3
+
+  redis-node3:
+    image: redis:7.0-alpine
+    container_name: redis-node3
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --port 6379
+    volumes:
+      - ./data/redis-node3:/data
+    ports:
+      - "6381:6379"
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.4
+
+  redis-node4:
+    image: redis:7.0-alpine
+    container_name: redis-node4
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --port 6379
+    volumes:
+      - ./data/redis-node4:/data
+    ports:
+      - "6382:6379"
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.5
+
+  redis-node5:
+    image: redis:7.0-alpine
+    container_name: redis-node5
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --port 6379
+    volumes:
+      - ./data/redis-node5:/data
+    ports:
+      - "6383:6379"
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.6
+
+  redis-node6:
+    image: redis:7.0-alpine
+    container_name: redis-node6
+    command: redis-server --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --port 6379
+    volumes:
+      - ./data/redis-node6:/data
+    ports:
+      - "6384:6379"
+    networks:
+      redis-net:
+        ipv4_address: 172.28.0.7
+
+networks:
+  redis-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16

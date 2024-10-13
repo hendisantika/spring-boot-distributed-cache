@@ -2,7 +2,7 @@ server:
   compression:
     enabled: true
   # Default port
-  port: 8081
+  port: 8080
   # Enable graceful shutdown - Server will wait for active request to finish
   shutdown: graceful
   tomcat:

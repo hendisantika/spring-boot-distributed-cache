@@ -7,7 +7,9 @@
 # client on the Docker host, because each port is published 1:1.
 set -eu
 
-PORTS="7100 7101 7102 7103 7104 7105"
+# Overridable so an integration test can bring up a second cluster on its own
+# port range without colliding with the compose stack.
+PORTS="${REDIS_CLUSTER_PORTS:-7100 7101 7102 7103 7104 7105}"
 REPLICAS=1
 
 for port in ${PORTS}; do

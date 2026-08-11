@@ -113,6 +113,20 @@
 
     <build>
         <plugins>
+            <!-- Runs the *IT classes, which need a Docker daemon, during `mvn verify`.
+                 Surefire only matches *Test/*Tests, so without this they never execute. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

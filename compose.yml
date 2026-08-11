@@ -5,6 +5,10 @@ services:
     # 3 masters + 3 replicas, one process per port, all announcing 127.0.0.1 so
     # MOVED/ASK redirects stay reachable from the Docker host.
     entrypoint: [ "/bin/sh", "/docker/start-redis-cluster.sh" ]
+    labels:
+      # The app builds its own RedisClusterConfiguration from cache.redis.config.nodes,
+      # so Boot must not derive single-node connection details from this service.
+      org.springframework.boot.ignore: "true"
     volumes:
       - ./docker/start-redis-cluster.sh:/docker/start-redis-cluster.sh:ro
       - redis-cluster-data:/data

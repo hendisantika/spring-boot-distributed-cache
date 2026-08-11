@@ -32,11 +32,11 @@ cache:
       min-idle-pool: 0
       retry: 1
       nodes:
-        - localhost: 7000
-        - localhost: 7001
-        - localhost: 7002
-        - localhost: 7003
-        - localhost: 7004
-        - localhost: 7005
+        - "localhost:7100"
+        - "localhost:7101"
+        - "localhost:7102"
+        - "localhost:7103"
+        - "localhost:7104"
+        - "localhost:7105"
     ttl: 1m
     compression-algorithm: SNAPPY

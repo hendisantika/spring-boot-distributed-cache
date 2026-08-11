@@ -1,6 +1,5 @@
 package com.hendisantika.distributedcache.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hendisantika.distributedcache.config.RedisProperties;
 import com.hendisantika.distributedcache.model.FallbackDTO;
 import com.hendisantika.distributedcache.model.ItemDTO;
@@ -10,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Created by IntelliJ IDEA.

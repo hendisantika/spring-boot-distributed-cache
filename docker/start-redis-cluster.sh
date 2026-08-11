@@ -31,8 +31,19 @@ for port in ${PORTS}; do
   done
 done
 
-if redis-cli -p 7100 cluster info | grep -q 'cluster_state:ok'; then
-  echo "Redis Cluster already formed, skipping create."
+first_port=$(echo "${PORTS}" | cut -d' ' -f1)
+
+# A node that has never joined a cluster reports exactly one known node. Using
+# that instead of cluster_state avoids a restart race: after a restart the nodes
+# rediscover each other asynchronously, so cluster_state is briefly "fail" even
+# though the cluster is already formed, and re-running create would abort.
+known_nodes=$(redis-cli -p "${first_port}" cluster info | awk -F: '/cluster_known_nodes/ {print $2 + 0}')
+
+if [ "${known_nodes}" -gt 1 ]; then
+  echo "Redis Cluster already formed (${known_nodes} known nodes), waiting for it to settle."
+  while ! redis-cli -p "${first_port}" cluster info | grep -q 'cluster_state:ok'; do
+    sleep 0.5
+  done
 else
   echo "Forming Redis Cluster over ports: ${PORTS}"
   # shellcheck disable=SC2086 # word splitting builds the node list
